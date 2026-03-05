@@ -6,11 +6,11 @@ secret="secret"
 client = TrelloClient(
     api_key=api,
     api_secret=secret,
-    token='your-oauth-token-key',
-    token_secret='your-oauth-token-secret'
 )
 
 def main():
+    boards = client.list_boards()
+    print(boards[-1].name)
     print("Kill me right now")
 
 
