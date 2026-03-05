@@ -1,11 +1,11 @@
 from trello import TrelloClient
 
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
-secret = "adf924cd87998ca0832d5ad7adf015d7ac89765efd5c9390900f94faad14695b"
+token = "ATTA499aed423e1f8c8d9e6b7342e9fdc93a88053e51526037e58616fb50867236033EB1F029"
 
 client = TrelloClient(
     api_key=api,
-    api_secret=secret,
+    api_secret=token,
 )
 
 
