@@ -1,9 +1,11 @@
-from trello import TrelloClient
+from datetime import datetime
+from email.utils import formatdate
+from trello import Card, TrelloClient
 import platform
 import uuid
 import os
 import socket
-
+from typing import List
 # Nieuwe token aanvragen: https://trello.com/1/authorize?expiration=1day&scope=read,write&response_type=token&key=31ec916f741962caeb3b4d2ca1fd43b7
 
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
@@ -23,7 +25,7 @@ status_list = board.get_list(status_list_id)
 command_list = board.get_list(command_list_id)
 
 
-def _get_unique_id():
+def _get_unique_id() -> str:
     if platform.system() == "Linux":
         if os.path.exists("/etc/machine-id"):
             with open("/etc/machine-id", "r") as f:
@@ -32,12 +34,32 @@ def _get_unique_id():
 
 
 def main():
-    _announce()
+    _update_or_announce()
 
 
-def _announce():
+def _update_or_announce() -> None:
+    unique_id = _get_unique_id()
+    card = _in_status_list(unique_id)
+    if card is None:
+        _announce(unique_id)
+    else:
+        _update_status(card, unique_id)
+
+
+def _announce(unique_id: str):
+    print("Announce")
+    system_info = _get_system_info(unique_id)
+
+    status_list.add_card(
+        name=system_info[0],
+        desc=system_info[1],
+    )
+
+
+def _get_system_info(unique_id: str) -> tuple[str, str]:
+    time_date = formatdate(timeval=None, localtime=False, usegmt=True)
+
     system_info_list = [
-        f"Unique ID:    {_get_unique_id()}",
         f"Hostname:     {socket.gethostname()}",
         f"OS Name:      {platform.system()}",
         f"OS Release:   {platform.release()}",
@@ -45,19 +67,29 @@ def _announce():
         f"Machine:      {platform.machine()}",
         f"Processor:    {platform.processor()}",
         f"Python:       {platform.python_version()}",
-        f"Platform:     {platform.platform()}"
+        f"Platform:     {platform.platform()}",
+        f"Last Update:  {time_date}"
     ]
-    system_desc = "\n".join([f"* {item}" for item in system_info_list[1:]])
-    status_list.add_card(
-        name=system_info_list[0],
-        desc=system_desc,
 
-
+    system_desc = "\n".join([f"* {item}" for item in system_info_list])
+    return (
+        f"{unique_id}",
+        system_desc,
     )
 
 
-def _update_status():
-    pass
+def _in_status_list(unique_id: str) -> Card | None:
+    lijstje = status_list.list_cards(card_filter="open")
+    for card in lijstje:
+        if card.name == unique_id:
+            return card
+
+    return None
+
+
+def _update_status(card: Card, unique_id: str) -> None:
+    print("Update status")
+    card.set_description(_get_system_info(unique_id)[1])
 
 
 if __name__ == "__main__":
