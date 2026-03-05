@@ -4,8 +4,11 @@ import uuid
 import os
 import socket
 
+# Nieuwe token aanvragen: https://trello.com/1/authorize?expiration=1day&scope=read,write&response_type=token&key=31ec916f741962caeb3b4d2ca1fd43b7
+
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
-token = "ATTA499aed423e1f8c8d9e6b7342e9fdc93a88053e51526037e58616fb50867236033EB1F029"
+token = "ATTA8be4e70421b8e94f58eb722edf7dcbc3f9502cec32383e4ba4599c12c617fbca5637B511"
+
 board_id = "8Gjc8fX8"
 status_list_id = "69a946c9af7564bacbed187d"
 command_list_id = "69a946cd58f076e0489335cb"
