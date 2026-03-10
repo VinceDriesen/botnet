@@ -8,4 +8,5 @@ dependencies = [
     "py-trello>=0.20.1",
     "pyautogui>=0.9.54",
     "pyttsx>=1.1",
+    "pyttsx3>=2.99",
 ]

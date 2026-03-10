@@ -19,6 +19,7 @@ class Runner:
     def _find_payload(self, payload_list, payload_id) -> str:
         payload = ""
         card = card_from_list(payload_list, payload_id)
+        print(payload_id)
         if card is None:
             print("Geen valid payload")
         else:
