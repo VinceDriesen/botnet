@@ -1,6 +1,7 @@
 from trello import List as TrelloList, Card
 from .utils import card_from_list
 from .status_updater import StatusUpdater
+import sys
 
 
 class Runner:
@@ -13,7 +14,7 @@ class Runner:
 
     def remove_client(self):
         self.status_updater.remove_status() 
-        quit()
+        sys.exit()
         
     def _find_payload(self, payload_list, payload_id) -> str:
         payload = ""
