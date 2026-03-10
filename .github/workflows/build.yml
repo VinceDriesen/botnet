@@ -1,0 +1,62 @@
+name: Build Executables with Nuitka
+
+on:
+  push:
+    branches: [ "main" ] 
+  workflow_dispatch:     
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        
+    # 1. Force Nuitka to store its cache in a unified, local folder
+    env:
+      NUITKA_CACHE_DIR: ${{ github.workspace }}/.nuitka-cache
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+        cache: 'pip'
+
+    # 3. This caches the Nuitka C-compiler objects and downloaded tools
+    - name: Cache Nuitka Build
+      uses: actions/cache@v4
+      with:
+        path: .nuitka-cache
+        # The key changes on every commit, but restore-keys tells GitHub 
+        # to fall back to the most recent cache if an exact match isn't found.
+        key: ${{ runner.os }}-nuitka-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-nuitka-
+
+    - name: Install dependencies and Nuitka
+      run: |
+        python -m pip install --upgrade pip
+        pip install "nuitka[onefile]"
+        pip install .  
+
+    - name: Build executable with Nuitka
+      run: python -m nuitka --assume-yes-for-downloads --standalone --onefile --remove-output main.py
+
+    # -- Artifacts upload (for normal pushes) --
+    - name: Upload Windows Executable (Artifact)
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-build
+        path: main.exe
+
+    - name: Upload Linux Binary (Artifact)
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-build
+        path: main.bin
