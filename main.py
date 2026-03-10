@@ -13,7 +13,7 @@ from src.utils import card_from_list
 # Nieuwe token aanvragen: https://trello.com/1/authorize?expiration=1day&scope=read,write&response_type=token&key=31ec916f741962caeb3b4d2ca1fd43b7
 
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
-token = "ATTA8be4e70421b8e94f58eb722edf7dcbc3f9502cec32383e4ba4599c12c617fbca5637B511"
+token = "ATTAecf5ece5c6ab2fa61dbe09bf6e78c1761b5b6096bb45e104163e3b540a9d91e6E8A7D5FF"
 
 board_id = "8Gjc8fX8"
 status_list_id = "69a946c9af7564bacbed187d"
