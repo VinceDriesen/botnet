@@ -1,4 +1,4 @@
-from trello import Card, TrelloClient, List as TrelloList
+from trello import Card, List as TrelloList
 
 
 def card_from_list(lijstje: TrelloList, unique_id: str) -> Card | None:

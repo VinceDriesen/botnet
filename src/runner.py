@@ -1,12 +1,18 @@
 from trello import List as TrelloList, Card
 from .utils import card_from_list
+from .status_updater import StatusUpdater
 
 
 class Runner:
+    def __init__(self, status_updater: StatusUpdater) -> None:
+        self.status_updater = status_updater
+    
     def execute_command(self, payload_id: str, payload_list: TrelloList):
         self._run_payload(payload_list, payload_id)
+        self.status_updater.runned_payload(f"Executes payload with id: {payload_id}")
 
-    def remove_client(self, unique_id: str):
+    def remove_client(self):
+        self.status_updater.remove_status()
 
     def _find_payload(self, payload_list, payload_id) -> str:
         payload = ""

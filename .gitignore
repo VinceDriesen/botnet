@@ -1,2 +1,6 @@
 ./.venv
 .env
+typings/
+__pycache__/
+*.py[codz]
+*$py.class
