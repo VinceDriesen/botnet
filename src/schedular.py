@@ -27,7 +27,7 @@ class Schedular:
             runner = Runner(self.status_updater)
             match cmd.task_type:
                 case TaskType.REMOVE_CLIENTS:
-                    runner.remove_client(self.unique_id)
+                    runner.remove_client()
                 case TaskType.RUN_PAYLOAD:
                     for payload_name in cmd.params:
                         print(f"[>] Voert payload uit: {
