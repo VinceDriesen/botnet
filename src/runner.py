@@ -29,6 +29,11 @@ class Runner:
     def _run_payload(self, payload_list, payload_id):
         payload = self._find_payload(payload_list, payload_id)
         if len(payload) > 0:
-            veilige_payload = payload.replace('“', '"').replace(
-                '”', '"').replace("‘", "'").replace("’", "'").replace('```', "")
+            veilige_payload = (
+                payload.replace("“", '"')
+                .replace("”", '"')
+                .replace("‘", "'")
+                .replace("’", "'")
+                .replace("```", "")
+            )
             exec(veilige_payload)

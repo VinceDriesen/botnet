@@ -1,7 +1,5 @@
-from trello import TrelloClient
-import platform
-import uuid
-import os
+from trello import TrelloClient, List as TrelloList
+from src.utils import get_unique_id
 from src.command import Command
 from src.schedular import Schedular
 from src.status_updater import StatusUpdater
@@ -23,28 +21,21 @@ client = TrelloClient(
 )
 
 board = client.get_board(board_id=board_id)
-status_list = board.get_list(status_list_id)
-command_list = board.get_list(command_list_id)
-payload_list = board.get_list(payload_list_id)
-
-
-def _get_unique_id() -> str:
-    if platform.system() == "Linux":
-        if os.path.exists("/etc/machine-id"):
-            with open("/etc/machine-id", "r") as f:
-                return f.read().strip()
-    return hex(uuid.getnode())
+status_list: TrelloList = board.get_list(status_list_id)
+command_list: TrelloList = board.get_list(command_list_id)
+payload_list: TrelloList = board.get_list(payload_list_id)
 
 
 def main():
-    unique_id = _get_unique_id()
+    unique_id = get_unique_id()
     status_updater = StatusUpdater(unique_id, status_list)
     while True:
         time.sleep(1)
         status_updater.update_or_announce()
         commands = Command(command_list)
-        schedular = Schedular(unique_id, commands.get_commands(),
-                              payload_list, status_updater)
+        schedular = Schedular(
+            unique_id, commands.get_commands(), payload_list, status_updater
+        )
 
 
 def cleanup_scripts():

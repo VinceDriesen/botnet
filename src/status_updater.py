@@ -1,9 +1,8 @@
 from email.utils import formatdate
-from trello import Card, List as TrelloList
+from trello import List as TrelloList
 import platform
 import socket
 from src.utils import card_from_list
-from src.command import TaskType
 
 
 class StatusUpdater:
@@ -41,7 +40,7 @@ class StatusUpdater:
             f"Processor:    {platform.processor()}",
             f"Python:       {platform.python_version()}",
             f"Platform:     {platform.platform()}",
-            f"Last Update:  {time_date}"
+            f"Last Update:  {time_date}",
         ]
 
         system_desc = "\n".join([f"* {item}" for item in system_info_list])
