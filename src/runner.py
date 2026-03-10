@@ -3,24 +3,23 @@ from .utils import card_from_list
 
 
 class Runner:
-    def __init__(self, payload_id: str, payload_list: TrelloList):
-        self.payload_id = payload_id
-        self.payload_list = payload_list
-        self.payload = ""
-        self._find_payload()
-        if len(self.payload) > 0:
-            self._run()
+    def execute_command(self, payload_id: str, payload_list: TrelloList):
+        self._run_payload(payload_list, payload_id)
 
-    def _find_payload(self):
-        card = card_from_list(self.payload_list, self.payload_id)
+    def remove_client(self, unique_id: str):
+
+    def _find_payload(self, payload_list, payload_id) -> str:
+        payload = ""
+        card = card_from_list(payload_list, payload_id)
         if card is None:
             print("Geen valid payload")
         else:
-            self.payload = card.desc
-        print(card)
+            payload = card.desc
+        return payload
 
-    def _run(self):
-        veilige_payload = self.payload.replace('“', '"').replace(
-            '”', '"').replace("‘", "'").replace("’", "'")
-
-        exec(veilige_payload)
+    def _run_payload(self, payload_list, payload_id):
+        payload = self._find_payload(payload_list, payload_id)
+        if len(payload) > 0:
+            veilige_payload = payload.replace('“', '"').replace(
+                '”', '"').replace("‘", "'").replace("’", "'")
+            exec(veilige_payload)
