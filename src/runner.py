@@ -10,8 +10,6 @@ class Runner:
 
     def execute_command(self, payload_id: str, payload_list: TrelloList):
         self._run_payload(payload_list, payload_id)
-        self.status_updater.runned_payload(
-            f"Executes payload with id: {payload_id}")
         return True
 
     def remove_client(self):

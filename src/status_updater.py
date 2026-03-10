@@ -18,12 +18,6 @@ class StatusUpdater:
         else:
             self._update_status(self.card)
 
-    def runned_payload(self, additional_info: str) -> None:
-        self.update_or_announce()
-        description: str = self.card.description
-        description = additional_info + "\n" + description
-        self.card.set_description(description)
-
     def remove_status(self) -> None:
         self.card.delete()
 
