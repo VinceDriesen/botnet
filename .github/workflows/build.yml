@@ -21,7 +21,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11' # Pas dit aan naar jouw Python versie
+        python-version: '3.14' # Pas dit aan naar jouw Python versie
         cache: 'pip'
 
     - name: Install dependencies en Nuitka
