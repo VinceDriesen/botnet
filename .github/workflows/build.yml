@@ -1,0 +1,51 @@
+name: Build Executables with Nuitka
+
+# Bepaal wanneer de actie moet draaien
+on:
+  push:
+    branches: [ "main" ] # Draait automatisch bij een push naar main
+  workflow_dispatch:     # Zorgt voor een knop in GitHub om hem handmatig te starten
+
+jobs:
+  build:
+    # Dit start twee servers op: een voor Ubuntu (Linux) en een voor Windows
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # Pas dit aan naar jouw Python versie
+        cache: 'pip'
+
+    - name: Install dependencies en Nuitka
+      run: |
+        python -m pip install --upgrade pip
+        pip install nuitka
+        pip install .  # Installeert de dependencies uit je pyproject.toml
+
+    - name: Build executable met Nuitka
+      # Let op: vervang 'main.py' door de naam van jouw daadwerkelijke script
+      run: python -m nuitka --standalone --onefile --remove-output main.py
+
+    # -- Upload de bestanden zodat je ze kunt downloaden vanuit GitHub --
+    
+    - name: Upload Windows Executable
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-build
+        path: main.exe
+
+    - name: Upload Linux Binary
+      if: runner.os == 'Linux'
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-build
+        path: main.bin
