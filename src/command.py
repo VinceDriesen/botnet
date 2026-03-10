@@ -1,5 +1,5 @@
 from enum import Enum
-from trello import List as TrelloList
+from trello import List as TrelloList, Checklist
 from dataclasses import dataclass, field
 
 
@@ -11,6 +11,7 @@ class TaskType(Enum):
 @dataclass(order=True)
 class ParsedCommand:
     priority: int
+    checklist: Checklist = field(compare=False)
     task_type: TaskType = field(compare=False)
     params: list[str] = field(default_factory=list, compare=False)
     clients: list[str] = field(default_factory=list, compare=False)
@@ -26,15 +27,12 @@ class Command:
                     task_data = self._parse_description(card.desc)
                     parsed_cmd = ParsedCommand(
                         priority=task_data["priority"],
+                        checklist=card.checklists[0],
                         task_type=task_type,
                         params=task_data["params"],
                         clients=task_data["clients"]
                     )
                     self._tasks.append(parsed_cmd)
-                else:
-                    print(f"Is ut eh man, geen valid tasktype: {card.name}")
-            else:
-                print(f"card met id: {card.id}, had geen execute label")
 
     def get_commands(self) -> list[ParsedCommand]:
         return self._tasks

@@ -6,6 +6,7 @@ from src.command import Command
 from src.schedular import Schedular
 from src.status_updater import StatusUpdater
 import atexit
+import time
 # Nieuwe token aanvragen: https://trello.com/1/authorize?expiration=1day&scope=read,write&response_type=token&key=31ec916f741962caeb3b4d2ca1fd43b7
 
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
@@ -38,14 +39,19 @@ def _get_unique_id() -> str:
 def main():
     unique_id = _get_unique_id()
     status_updater = StatusUpdater(unique_id, status_list)
-    status_updater.update_or_announce()
-    commands = Command(command_list)
-    schedular = Schedular(unique_id, commands.get_commands(), payload_list, status_updater)
-    
+    while True:
+        time.sleep(1)
+        status_updater.update_or_announce()
+        commands = Command(command_list)
+        schedular = Schedular(unique_id, commands.get_commands(),
+                              payload_list, status_updater)
+
+
 def cleanup_scripts():
-    pass # Scripts verwijderen enzo
+    pass  # Scripts verwijderen enzo
+
 
 atexit.register(cleanup_scripts)
-    
+
 if __name__ == "__main__":
     main()

@@ -1,8 +1,9 @@
 import heapq
-from trello import List as TrelloList
+from trello import Checklist, List as TrelloList
 from src.runner import Runner
 from .command import ParsedCommand, TaskType
 from .status_updater import StatusUpdater
+
 
 class Schedular:
     def __init__(self, unique_id: str, list_commands: list[ParsedCommand], payload_list: TrelloList, status_updater: StatusUpdater):
@@ -15,9 +16,10 @@ class Schedular:
         results = []
         for cmd in list_commands:
             if any(self.unique_id in client for client in cmd.clients):
-                heapq.heappush(results, cmd)
-                print(
-                    f"[*] Match gevonden voor id: {self.unique_id} (Prioriteit: {cmd.priority})")
+                if not any(self.unique_id in item.get('name') for item in cmd.checklist.items):
+                    heapq.heappush(results, cmd)
+                else:
+                    print("Dit is al geexecute")
 
         return results
 
@@ -30,6 +32,8 @@ class Schedular:
                     runner.remove_client()
                 case TaskType.RUN_PAYLOAD:
                     for payload_name in cmd.params:
-                        print(f"[>] Voert payload uit: {
-                              payload_name} (Task: {cmd.task_type.name})")
-                        runner.execute_command(payload_name, payload_list)
+                        if runner.execute_command(payload_name, payload_list):
+                            self._completed_command(cmd.checklist)
+
+    def _completed_command(self, checklist: Checklist):
+        checklist.add_checklist_item(self.unique_id)

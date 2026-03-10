@@ -6,4 +6,6 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "py-trello>=0.20.1",
+    "pyautogui>=0.9.54",
+    "pyttsx>=1.1",
 ]
