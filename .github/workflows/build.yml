@@ -44,7 +44,7 @@ jobs:
         pip install .  
 
     - name: Build executable with Nuitka
-      run: python -m nuitka --assume-yes-for-downloads --standalone --onefile --remove-output main.py
+      run: python -m nuitka --assume-yes-for-downloads --standalone --onefile --remove-output executable.py
 
     # -- Artifacts upload (for normal pushes) --
     - name: Upload Windows Executable (Artifact)
