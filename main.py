@@ -1,6 +1,4 @@
-import signal
-import sys
-from typing import NoReturn
+import atexit
 
 from trello import TrelloClient, List as TrelloList
 from src.utils import get_unique_id
@@ -33,12 +31,7 @@ def main():
     unique_id = get_unique_id()
     status_updater = StatusUpdater(unique_id, status_list)
 
-    def cleanup(sig, frame):
-        status_updater.remove_status()
-        sys.exit(0)
-
-    signal.signal(signal.SIGINT, cleanup)  # Ctrl+C
-    signal.signal(signal.SIGTERM, cleanup) # Kill command
+    atexit.register(status_updater.remove_status)
 
     while True:
         time.sleep(1)
