@@ -76,6 +76,14 @@ def download_zip():
     working_dir.mkdir(parents=True, exist_ok=True)
     zip_filepath = working_dir / "repo_download.zip"
 
+    print("Cleaning up old repository files...")
+    for item in working_dir.iterdir():
+        if item.is_dir() and item.name not in ["python_runtime", "venv"]:
+            try:
+                shutil.rmtree(item)
+            except Exception as e:
+                print(f"Warning: Could not delete old folder {item}: {e}")
+
     print(f"Downloading ZIP from {github_zip_url}")
     try:
         urllib.request.urlretrieve(github_zip_url, str(zip_filepath))
