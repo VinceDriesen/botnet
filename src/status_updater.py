@@ -1,5 +1,5 @@
 from email.utils import formatdate
-from trello import List as TrelloList
+from trello import List as TrelloList, Card
 import platform
 import socket
 from src.utils import card_from_list
@@ -18,7 +18,8 @@ class StatusUpdater:
             self._update_status(card)
 
     def remove_status(self) -> None:
-        self._get_card.delete()
+        card = self._get_card()
+        card.delete()
 
     def _announce(self):
         system_info = self._system_info()
@@ -28,7 +29,7 @@ class StatusUpdater:
             desc=system_info[1],
         )
 
-    def _get_card(self):
+    def _get_card(self) -> Card:
         return card_from_list(self.status_list, self.unique_id)
 
     def _system_info(self) -> tuple[str, str]:
