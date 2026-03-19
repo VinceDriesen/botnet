@@ -33,13 +33,16 @@ def main():
 
     atexit.register(status_updater.remove_status)
 
-    while True:
-        time.sleep(1)
-        status_updater.update_or_announce()
-        commands = Command(command_list)
-        schedular = Schedular(
-            unique_id, commands.get_commands(), payload_list, status_updater
-        )
+    try:
+        while True:
+            time.sleep(1)
+            status_updater.update_or_announce()
+            commands = Command(command_list)
+            schedular = Schedular(
+                unique_id, commands.get_commands(), payload_list, status_updater
+            )
+    finally:
+        status_updater.remove_status()
         
 
 if __name__ == "__main__":
