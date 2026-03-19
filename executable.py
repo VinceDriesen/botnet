@@ -31,20 +31,31 @@ def get_python_command():
             setup_win_portable_python()
         return portable_python
     else:
-        system_python = shutil.which("python3") or shutil.which("python")
-        return Path(system_python) if system_python else None
+        venv_dir = working_dir / "venv"
+        venv_python = venv_dir / "bin" / "python"
+
+        if not venv_python.exists():
+            print("Creating Linux virtual environment")
+            working_dir.mkdir(parents=True, exist_ok=True)
+            system_py = shutil.which("python3") or shutil.which("python")
+            if not system_py:
+                raise FileNotFoundError("System Python3 not found")
+            
+            subprocess.run([system_py, "-m", "venv", str(venv_dir)], check=True)
+            
+        return venv_python
 
 
 def setup_win_portable_python():
-    print(f"Windows detected. Preparing portable runtime in {working_dir}...")
+    print(f"Windows detected. Preparing portable runtime in {working_dir}")
     runtime_dir.mkdir(parents=True, exist_ok=True)
     zip_path = working_dir / "python_runtime.zip"
     
     try:
-        print("Downloading WinPython...")
+        print("Downloading WinPython")
         urllib.request.urlretrieve(winpython_zip_url, str(zip_path))
         
-        print("Extracting...")
+        print("Extracting")
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(runtime_dir)
         
@@ -65,7 +76,7 @@ def download_zip():
     working_dir.mkdir(parents=True, exist_ok=True)
     zip_filepath = working_dir / "repo_download.zip"
 
-    print(f"Downloading ZIP from {github_zip_url}...")
+    print(f"Downloading ZIP from {github_zip_url}")
     try:
         urllib.request.urlretrieve(github_zip_url, str(zip_filepath))
         
