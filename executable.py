@@ -18,6 +18,7 @@ def main():
     script_path = download_zip()
     
     if script_path and python_cmd: 
+        install_packages(python_cmd, script_path.parent)
         run_main_script(script_path, python_cmd)
     else:
         print("Could not initialize environment or download script.")
@@ -82,11 +83,32 @@ def download_zip():
             
         repo_root = extracted_folders[0]
         script_path = repo_root / "main.py"
+        zip_filepath.unlink()
         return script_path
     
     except Exception as e:
         print(f"Error during download or extraction: {e}")
         return None
+
+
+def install_packages(python_exe: Path, repo_root: Path):
+    if not python_exe.exists():
+        print(f"Interpreter not found at: {python_exe}")
+
+    if not repo_root.exists():
+        print(f"Repository doesn't exist at: {repo_root}")
+
+    pyproject_file = repo_root / "pyproject.toml"
+    if pyproject_file.exists():
+        try:
+            subprocess.run(
+                [str(python_exe), "-m", "pip", "install", "."], 
+                cwd=str(repo_root), 
+                check=True
+            )
+            print("Dependencies installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to install dependencies: {e}")
 
 
 def run_main_script(script_path: Path, python_exe: Path):
