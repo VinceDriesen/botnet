@@ -52,11 +52,11 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: windows-build
-        path: main.exe
+        path: executable.exe
 
     - name: Upload Linux Binary (Artifact)
       if: runner.os == 'Linux'
       uses: actions/upload-artifact@v4
       with:
         name: linux-build
-        path: main.bin
+        path: executable.bin
