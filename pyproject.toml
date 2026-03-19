@@ -3,7 +3,7 @@ name = "netwerken"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "py-trello>=0.20.1",
     "pyautogui>=0.9.54",
