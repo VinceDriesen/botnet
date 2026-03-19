@@ -9,16 +9,16 @@ class StatusUpdater:
     def __init__(self, unique_id: str, status_list: TrelloList) -> None:
         self.unique_id = unique_id
         self.status_list = status_list
-        self.card = card_from_list(self.status_list, self.unique_id)
 
     def update_or_announce(self) -> None:
-        if self.card is None:
+        card = self._get_card()
+        if card is None:
             self._announce()
         else:
-            self._update_status(self.card)
+            self._update_status(card)
 
     def remove_status(self) -> None:
-        self.card.delete()
+        self._get_card.delete()
 
     def _announce(self):
         system_info = self._system_info()
@@ -27,6 +27,9 @@ class StatusUpdater:
             name=system_info[0],
             desc=system_info[1],
         )
+
+    def _get_card(self):
+        return card_from_list(self.status_list, self.unique_id)
 
     def _system_info(self) -> tuple[str, str]:
         time_date = formatdate(timeval=None, localtime=False, usegmt=True)
