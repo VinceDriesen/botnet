@@ -151,16 +151,19 @@ def run_main_script(script_path: Path, python_exe: Path):
         return
     
     print(f"Executing {script_path} using {python_exe}...")
+
+    process = subprocess.Popen([str(python_exe), str(script_path)])
+
     try:
-        subprocess.run(
-            [str(python_exe), str(script_path)], 
-            cwd=str(script_path.parent), 
-            check=True
-        )
-    except subprocess.CalledProcessError as e:
-        print(f"External script failed with exit code {e.returncode}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        process.wait()
+    except KeyboardInterrupt:
+        print("\n[Wrapper] Interrupted, waiting for child to clean up...")
+        # Give the child process (main.py) up to 5 seconds to finish remove_status()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            print("[Wrapper] Cleanup taking too long, forcing exit.")
+            process.kill()
 
 if __name__ == "__main__":
     main()
