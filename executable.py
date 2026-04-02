@@ -105,7 +105,7 @@ def download_zip():
             
         extracted_folders = [
             d for d in working_dir.iterdir() 
-            if d.is_dir() and d.name != "python_runtime"
+            if d.is_dir() and d.name not in ["python_runtime", "venv"]
         ]
         
         if not extracted_folders:
