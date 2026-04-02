@@ -9,7 +9,7 @@ import time
 # Nieuwe token aanvragen: https://trello.com/1/authorize?expiration=1day&scope=read,write&response_type=token&key=31ec916f741962caeb3b4d2ca1fd43b7
 
 api = "31ec916f741962caeb3b4d2ca1fd43b7"
-token = "ATTAbbb0df7680738b87679dcc32e18c97ca877040bd54da2db90c89433cd37c73a3B1F31D43"
+token = "ATTA994853bd25c052d1431ff752b110f4f8fdf00cb48aaf74a0ac27fc0150d0050aAB358150"
 
 board_id = "8Gjc8fX8"
 status_list_id = "69a946c9af7564bacbed187d"
